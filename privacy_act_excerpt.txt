@@ -1,0 +1,22 @@
+Privacy Act — Excerpt (Fictionalized Demo)
+
+SECTION 3: Definitions
+3.1 "personal information" means any information about an identifiable individual, including name,
+address, telephone number, email address, and other identifiers used by federal institutions.
+
+SECTION 4: Collection of Personal Information
+4.1 Institutions shall only collect personal information necessary for the administration of a program;
+4.2 Consent must be obtained where required by law; collection must be authorized and minimal.
+
+SECTION 5: Use, Disclosure and Retention
+5.1 Personal information may be used only for the purposes for which it was collected;
+5.2 Disclosure requires lawful authority or the consent of the individual;
+5.3 Institutions must retain personal information only as long as necessary and must destroy it securely.
+
+SECTION 6: Access to Records
+6.1 Individuals have the right to request access to records held by institutions regarding themselves;
+6.2 Requests shall be processed in a timely manner and in accordance with regulations.
+
+SECTION 7: Correction of Records
+7.1 Individuals may request correction of inaccurate personal information;
+7.2 Institutions shall take reasonable steps to correct records where errors are found.
