@@ -9,7 +9,6 @@ This README includes:
 * 🛠️ Installation Steps
 * ▶️ How to Run the Project
 * 🔧 Troubleshooting
-* 📜 License (optional)
 
 ---
 
