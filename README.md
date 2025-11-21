@@ -1,58 +1,185 @@
-# GovAI Knowledge Companion — Demo Project
+# GovAI Knowledge Companion
 
-This repository contains a **demo** implementation of the GovAI Knowledge Companion (RAG-powered) using **Llama 3.1 (via Ollama)**, **Sentence-Transformers embeddings**, **Chroma** vector store, and a **Streamlit** frontend.
+A local, privacy-preserving Retrieval-Augmented Generation (RAG) system designed for government workflows. This project loads documents, builds vector embeddings, indexes them with ChromaDB, and answers user questions using an on-device Llama model via **Ollama**.
 
-## What this demo includes
-- Document ingestion and chunking scripts
-- Embedding and Chroma indexing script
-- Simple RAG query flow that retrieves top-k chunks and calls Llama via Ollama
-- Streamlit UI to interact with the system
-- Sample document: `privacy_act_excerpt.txt` (small excerpt for demo)
+This README includes:
 
-## Prerequisites
-- Python 3.10+
-- [Ollama](https://ollama.com/) installed and running locally
-  - Pull Llama model: `ollama pull llama3.1:8b` (or another compatible model)
-- Create and activate a Python virtual environment, then install requirements:
+* 🚀 Project Overview
+* 📂 Recommended Folder Structure
+* 🛠️ Installation Steps
+* ▶️ How to Run the Project
+* 🔧 Troubleshooting
+* 📜 License (optional)
+
+---
+
+## 🚀 Project Overview
+
+The GovAI Knowledge Companion is a secure RAG application designed for government environments where cloud-based LLMs cannot be used. All processing—including embeddings, retrieval, and generation—runs **fully local** using:
+
+* **Ollama** (local LLM serving)
+* **Llama 3.1 (8B)** or any compatible model
+* **ChromaDB** for vector storage
+* **Streamlit** for the frontend UI
+
+This allows government employees to upload or index policy documents and ask natural-language questions with chunk-level citations.
+
+---
+
+## 📂 Recommended Folder Structure
+
+Below is the clean, standardized structure for your repo. You can update your project to match this layout.
+
 ```
-python -m venv .venv
-source .venv/bin/activate    # macOS / Linux
-.venv\Scripts\activate     # Windows
+govai-knowledge-companion/
+│
+├── backend/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── embed.py
+│   ├── llm.py
+│   └── rag.py
+│
+├── scripts/
+│   ├── build_index.py
+│   └── ingest_docs.py
+│
+├── ui/
+│   ├── app.py            # Streamlit UI
+│   └── __init__.py
+│
+├── data/
+│   ├── raw/              # Original source documents
+│   └── processed/        # Chunked text
+│
+├── chroma/               # Auto-created by ChromaDB
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
+
+If you'd like, I can auto-generate all missing folders and files.
+
+---
+
+## 🛠️ Installation Instructions
+
+Follow these steps to install and run your project on Windows/macOS/Linux.
+
+### 1️⃣ Clone the repo
+
+```
+git clone https://github.com/<your-username>/govai-knowledge-companion.git
+cd govai-knowledge-companion
+```
+
+### 2️⃣ Create Virtual Environment
+
+```
+python -m venv venv
+source venv/bin/activate      # macOS / Linux
+venv\Scripts\activate         # Windows
+```
+
+### 3️⃣ Install Dependencies
+
+```
 pip install -r requirements.txt
 ```
 
-## Quick setup (one-time)
-1. Index the demo document:
+---
+
+## 🦙 Install and Run Ollama
+
+### Install Ollama
+
+* Download from [https://ollama.com](https://ollama.com)
+
+### Pull the Llama Model
+
 ```
-python scripts/build_index.py
+ollama pull llama3.1:8b
 ```
-2. Launch the Streamlit UI:
+
+### Start the Ollama Server
+
+```
+ollama serve
+```
+
+*(Must be running in a separate terminal window.)*
+
+---
+
+## 📚 Build the Embedding Index
+
+Before running the UI, you must build the vector database.
+
+```
+python -m scripts.build_index
+```
+
+This processes your documents → chunks → embeddings → Chroma index.
+
+---
+
+## ▶️ Run the Streamlit App
+
 ```
 streamlit run ui/app.py
 ```
 
-## Notes on Ollama
-This demo expects Ollama to be available locally. The `ollama` Python package is used to communicate with the local Ollama daemon. Make sure Ollama is running (by launching the Ollama app or running the Ollama daemon) and the model (e.g., `llama3.1:8b`) is pulled.
+The app launches here:
 
-## Security & Responsible AI
-- This demo runs entirely locally — no data leaves your machine.
-- The demo provides simple citation output (chunk metadata) to support explainability.
-- For production use, deploy inside a secure, audited environment and add bias checks, logging, access control, and human-in-the-loop validation as described in the submission.
+```
+http://localhost:8501
+```
 
-## Project structure
+---
+
+## 🔧 Troubleshooting
+
+### **Ollama Port Already in Use**
+
 ```
-govai-knowledge-companion/
-├── backend/
-│   ├── ingest.py
-│   ├── embed.py
-│   ├── rag.py
-│   ├── llm.py
-│   └── config.py
-├── ui/
-│   └── app.py
-├── scripts/
-│   └── build_index.py
-├── privacy_act_excerpt.txt
-├── requirements.txt
-└── README.md
+netstat -ano | findstr 11434
 ```
+
+Then kill the process:
+
+```
+taskkill /PID <PID> /F
+```
+
+### **ModuleNotFoundError: No module named 'backend'**
+
+Make sure:
+
+* `backend/` has `__init__.py`
+* You are running from project root:
+
+```
+python -m ui.app
+```
+
+Or use Streamlit:
+
+```
+streamlit run ui/app.py
+```
+
+### **Ollama Client Errors**
+
+Use the updated API:
+
+```
+response = ollama.generate(model=model, prompt=prompt)
+```
+
+### **Slow Generation**
+
+Running locally means:
+
+* Llama 8B uses CPU by default on most Windows machines
+* For GPU acceleration, enable CUDA or use WSL2
